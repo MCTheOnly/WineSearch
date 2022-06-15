@@ -8,8 +8,10 @@ class Search_Wine extends WP_Widget {
 		'szczep',
 		'producent'
 	);
+
+	public $wc_attributes;
 	
-	public $attributes_terms =array();
+	public $attributes_terms;
 	
 	//setup
 	public function __construct() {
@@ -44,6 +46,28 @@ class Search_Wine extends WP_Widget {
 		}
 		return $attributes_array;
 	}
+
+	public function get_wc_products() {
+
+		$products_array = array();
+
+		$args = array(
+			'post_type'      => 'product',
+			'posts_per_page' => 20
+		);
+		
+		$loop = new WP_Query( $args );
+		
+		while ( $loop->have_posts() ) : $loop->the_post();
+			global $product;
+			$this->wc_attributes = $product;
+		endwhile;
+		
+
+		wp_reset_query();
+
+		return $product;
+	}
 	
 	//frontend
 	public function widget( $args, $instance ) {
@@ -72,22 +96,32 @@ class Search_Wine extends WP_Widget {
 							</div>
 						<?php endforeach; ?>
 					<?php endif; ?>
-					<input type="submit" value="Szukaj">
+					<input type="submit" name="submit" value="Szukaj">
 
 				</form>
 			</div>
 		</div>
+
 		<?php
-		
+		if ( isset( $_POST['submit'] ) ) {
+
+			
+			echo '<pre>';
+			print_r ( $_POST );
+			echo '</pre>';
+
+			// $product = $this->get_wc_products();
+			
+			echo '<pre>';
+			echo $this->wc_attributes;
+			echo '</pre>';
+		}
+
 		echo $args['after_widget'];
 	}
+	
 }
 
-if ( isset( $_POST ) && !empty( $_POST ) ) {
-	echo '<pre>';
-	print_r ( $_POST );
-	echo '</pre>';
-}
 
 add_action('widgets_init', function() {
 	register_widget( 'Search_Wine' );
