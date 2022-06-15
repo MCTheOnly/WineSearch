@@ -52,21 +52,39 @@ class Search_Wine extends WP_Widget {
 		$products_array = array();
 
 		$args = array(
-			'post_type'      => 'product',
-			'posts_per_page' => 20
-		);
+			'post_type'      => array('product'),
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+		 );
 		
-		$loop = new WP_Query( $args );
-		
-		while ( $loop->have_posts() ) : $loop->the_post();
-			global $product;
-			$this->wc_attributes = $product;
-		endwhile;
-		
+		$query = new WP_Query( $args );
+		$product_ids = array();
+		$products = array();
+		 
+		 // The Loop
+		 if ( $query->have_posts() ): while ( $query->have_posts() ):
+			 $query->the_post();
+			 global $product;
+			 array_push( $product_ids, $product->get_attributes() );
+		 endwhile;
+			 wp_reset_postdata();
 
-		wp_reset_query();
+		 endif;
+		 
+		 foreach( $product_ids as $id ) {
+			array_push( $products, wc_get_product( $id ) );
+		}
+		print_r($product_ids);
+		 // TEST: Output the query IDs
+		
+		// while ( $query->have_posts() ) : $query->the_post();
+		// 	global $product;
+		// 	// array_push( $products_array,  $query);
+		// endwhile;
 
-		return $product;
+		// wp_reset_query();
+
+		return $query;
 	}
 	
 	//frontend
@@ -106,6 +124,8 @@ class Search_Wine extends WP_Widget {
 		if ( isset( $_POST['submit'] ) ) {
 
 			
+
+			
 			echo '<pre>';
 			print_r ( $_POST );
 			echo '</pre>';
@@ -113,7 +133,7 @@ class Search_Wine extends WP_Widget {
 			// $product = $this->get_wc_products();
 			
 			echo '<pre>';
-			echo $this->wc_attributes;
+			$this->get_wc_products();
 			echo '</pre>';
 		}
 
