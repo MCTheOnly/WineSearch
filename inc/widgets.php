@@ -53,35 +53,40 @@ class Search_Wine extends WP_Widget {
 		echo $args['before_widget']; 
 		
 		$this->attributes_terms = $this->get_products_attrs(); ?>
-			<div class="wine-search__container">
-				<h2><?php _e( 'Znajdź Swoje Następne Wino' ) ?></h2>
-				<div class="wine-search__search">
-					<form class="wine-search__form" id="wine-search-form">
-						<input type="text"><?php
-						if ( ! empty( $this->attributes ) ) :
-							foreach( $this->attributes as $attribute ) : ?>
-								<label for="<?php esc_attr_e( $attribute ); ?>">
-									<select id="<?php esc_attr_e( $attribute ); ?>" name="<?php esc_attr_e( $attribute ); ?>" form="wine-search-form">
-										<option><?php _e( $attribute ); ?></option>
-										<?php foreach( $this->attributes_terms[$attribute] as $terms ) :
-											foreach( $terms as $term ) : ?>
-												<option value="<?php esc_attr_e( $term->name ); ?>">
-													<?php _e( $term->name ); ?>
-												</option>
-											<?php endforeach; ?>	
-										<?php endforeach; ?>
-									</select>
+		<div class="wine-search__container">
+			<h2><?php _e( 'Znajdź Swoje Następne Wino' ) ?></h2>
+			<div class="wine-search__search">
+				<form class="wine-search__form" id="wine-search-form" method="post">
+					<input type="text"><?php
+					if ( ! empty( $this->attributes ) ) :
+						foreach( $this->attributes as $attribute ) : ?>
+							<div class="<?php esc_attr_e( $attribute ); ?>">
+							<?php foreach( $this->attributes_terms[$attribute] as $terms ) :
+								foreach( $terms as $term ) : ?>
+								<label for="<?php esc_attr_e( $term->name ); ?>">
+									<input type="checkbox" value="<?php esc_attr_e( $term->name );?>" id="<?php esc_attr_e( $term->name ); ?>" name="<?php esc_attr_e( $attribute . "[]" ); ?>">
+									<?php _e( $term->name ); ?>
 								</label>
+								<?php endforeach; ?>	
 							<?php endforeach; ?>
-						<?php endif; ?>
-						<input type="submit" value="Szukaj">
-					</form>
-				</div>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
+					<input type="submit" value="Szukaj">
+
+				</form>
 			</div>
+		</div>
 		<?php
 		
 		echo $args['after_widget'];
 	}
+}
+
+if ( isset( $_POST ) && !empty( $_POST ) ) {
+	echo '<pre>';
+	print_r ( $_POST );
+	echo '</pre>';
 }
 
 add_action('widgets_init', function() {
