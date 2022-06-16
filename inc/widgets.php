@@ -4,10 +4,6 @@ class Search_Wine extends WP_Widget {
 	
 	public static $attributes = array();
 
-	public $wc_attributes;
-	
-	public $attributes_terms;
-	
 	//setup
 	public function __construct() {
 		$widget_options = array(
@@ -26,26 +22,6 @@ class Search_Wine extends WP_Widget {
 	public function form( $instance ) {
 		echo '<p>No options</p>';
 	}
-	
-	// public static function get_products_attrs() {
-	// 	$attributes_array = array();
-	// 	$attr;
-		
-	// 	foreach( self::$attributes as $attribute ) {
-	// 		$attributes_array[$attribute] = array();
-	// 	}
-		
-	// 	foreach( self::$attributes as $attribute ) {
-	// 		if ( ! is_array( $attribute ) ) {
-	// 			$attr = 'pa_' . $attribute;
-	// 		}
-	// 		array_push( $attributes_array[$attribute], get_terms( array(
-	// 				'taxonomy'   => $attr,
-	// 				'hide_empty' => false
-	// 			) ) );
-	// 	}
-	// 	return $attributes_array;
-	// }
 
 	public static function wc_product_query() {
 
@@ -62,11 +38,13 @@ class Search_Wine extends WP_Widget {
 		if ( $query->have_posts() ): while ( $query->have_posts() ):
 			$query->the_post();
 			global $product;
+
 		endwhile;
 		wp_reset_postdata();
 		endif;
 	
 		wp_reset_query();
+
 		return $product;
 	}
 
@@ -78,15 +56,22 @@ class Search_Wine extends WP_Widget {
 	public static function fill_attributes_array() {
 		$product_attributes = self::get_product_attributes();
 		foreach( $product_attributes as $attribute ) {
-			array_push( self::$attributes, substr( $attribute['name'], 3 ) );
+			self::$attributes[substr( $attribute['name'], 3 )] = array();
+
+			$get_terms = get_terms( array(
+				'taxonomy'   => $attribute['name'],
+				'hide_empty' => false,
+			) );
+
+			foreach( $get_terms as $term ) {
+				array_push( self::$attributes[substr( $attribute['name'], 3 )], $term->name );
+			}
+
 		}
 	}
 	
 	//frontend
 	public function widget( $args, $instance ) {
-		
-		// $this->attributes_terms = $this->get_products_attrs();
-		// $this->attributes_terms = $this->get_products_attrs(); 
 		
 		echo $args['before_widget'];  ?>
 
@@ -96,15 +81,13 @@ class Search_Wine extends WP_Widget {
 				<form class="wine-search__form" id="wine-search-form" method="post">
 					<input type="text"><?php
 					if ( ! empty( self::$attributes ) ) :
-						foreach( self::$attributes as $attribute ) : ?>
+						foreach( self::$attributes as $attribute => $terms ) : ?>
 							<div class="<?php esc_attr_e( $attribute ); ?>">
-							<?php foreach( self::$attributes_terms[$attribute] as $terms ) :
-								foreach( $terms as $term ) : ?>
-								<label for="<?php esc_attr_e( $term->name ); ?>">
-									<input type="checkbox" value="<?php esc_attr_e( $term->name );?>" id="<?php esc_attr_e( $term->name ); ?>" name="<?php esc_attr_e( $attribute . "[]" ); ?>">
-									<?php _e( $term->name ); ?>
+							<?php foreach( $terms as $term ) : ?>
+								<label for="<?php esc_attr_e( $term ); ?>">
+									<input type="checkbox" value="<?php esc_attr_e( $term );?>" id="<?php esc_attr_e( $term ); ?>" name="<?php esc_attr_e( $attribute ); ?>">
+									<?php _e( $term ); ?>
 								</label>
-								<?php endforeach; ?>	
 							<?php endforeach; ?>
 							</div>
 						<?php endforeach; ?>
@@ -121,8 +104,6 @@ class Search_Wine extends WP_Widget {
 			echo '<pre>';
 			print_r ( $_POST );
 			echo '</pre>';
-
-			// $product = $this->get_wc_products();
 			
 			echo '<pre>';
 			print_r( self::$attributes );
