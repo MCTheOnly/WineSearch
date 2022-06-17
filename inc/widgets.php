@@ -15,6 +15,7 @@ class Search_Wine extends WP_Widget {
 
 	public static function init() {
 		register_widget( 'Search_Wine' );
+		wp_enqueue_style( 'wine-search-style', get_stylesheet_directory_uri() . '/inc/css/wineCSS.css', false );
 		self::fill_attributes_array();
 	} 
 	
@@ -66,7 +67,6 @@ class Search_Wine extends WP_Widget {
 			foreach( $get_terms as $term ) {
 				array_push( self::$attributes[substr( $attribute['name'], 3 )], $term->name );
 			}
-
 		}
 	}
 	
@@ -82,18 +82,21 @@ class Search_Wine extends WP_Widget {
 					<input type="text"><?php
 					if ( ! empty( self::$attributes ) ) :
 						foreach( self::$attributes as $attribute => $terms ) : ?>
-							<div class="<?php esc_attr_e( $attribute ); ?>">
-							<?php foreach( $terms as $term ) : ?>
-								<label for="<?php esc_attr_e( $term ); ?>">
-									<input type="checkbox" value="<?php esc_attr_e( $term );?>" id="<?php esc_attr_e( $term ); ?>" name="<?php esc_attr_e( $attribute ); ?>">
-									<?php _e( $term ); ?>
-								</label>
-							<?php endforeach; ?>
+							<div class="wine-search__attribute-container <?php esc_attr_e( $attribute ); ?>"> <?php esc_html_e( $attribute ); ?>
+								<ul>
+									<?php foreach( $terms as $term ) : ?>
+									<li>
+										<label for="<?php esc_attr_e( $term ); ?>">
+											<input type="checkbox" value="<?php esc_attr_e( $term );?>" id="<?php esc_attr_e( $term ); ?>" name="<?php esc_attr_e( $attribute . "[]" ); ?>">
+											<?php _e( $term ); ?>
+										</label>
+									</li>
+									<?php endforeach; ?>
+								</ul>
 							</div>
 						<?php endforeach; ?>
 					<?php endif; ?>
 					<input type="submit" name="submit" value="Szukaj">
-
 				</form>
 			</div>
 		</div>
