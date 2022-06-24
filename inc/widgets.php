@@ -14,10 +14,21 @@ class Search_Wine extends WP_Widget {
 	}
 
 	public static function init() {
-		register_widget( 'Search_Wine' );
+		self::fill_attributes_array(); 
+		add_action( 'init', self::register_wine() );
+		add_action( 'init', self::add_styles() );
+		add_action( 'init', self::add_scripts() );
+		wp_localize_script( 'wine-search-script', 'attributesData', self::$attributes );
+	}
+	public static function add_styles() {
 		wp_enqueue_style( 'wine-search-style', get_stylesheet_directory_uri() . '/inc/css/wineCSS.css', false );
-		self::fill_attributes_array();
-	} 
+	}
+	public static function add_scripts() {
+		wp_enqueue_script( 'wine-search-script', get_stylesheet_directory_uri() . '/inc/js/wineJS.js', false );
+	}
+	public static function register_wine() {
+		register_widget( 'Search_Wine' );
+	}
 	
 	//backend
 	public function form( $instance ) {
@@ -72,7 +83,6 @@ class Search_Wine extends WP_Widget {
 	public function widget( $args, $instance ) {
 		
 		echo $args['before_widget'];  ?>
-
 		<div class="wine-search__container">
 			<h2><?php _e( 'Znajdź Swoje Następne Wino' ) ?></h2>
 			<div class="wine-search__search">
@@ -80,7 +90,10 @@ class Search_Wine extends WP_Widget {
 					<input type="text"><?php
 					if ( ! empty( self::$attributes ) ) :
 						foreach( self::$attributes as $attribute => $terms ) : ?>
-							<div class="wine-search__attribute-container <?php esc_attr_e( $attribute ); ?>"> <?php esc_html_e( $attribute ); ?>
+							<div class="wine-search__attribute-container <?php esc_attr_e( $attribute ); ?>">
+								<label for="search-<?php esc_attr_e( $attribute ); ?>" class="js--">
+									<input type="text" placeholder="<?php esc_attr_e( $attribute ); ?>" id="search-<?php esc_attr_e( $attribute ); ?>">
+								</label>
 								<ul>
 									<?php foreach( $terms as $term ) : ?>
 									<li>
@@ -105,7 +118,9 @@ class Search_Wine extends WP_Widget {
 			echo '<pre>';
 			print_r ( $_POST );
 			echo '</pre>';
-			
+			?>
+
+			<?php
 			echo '<pre>';
 			print_r( self::$attributes );
 			echo '</pre>';
