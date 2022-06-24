@@ -50,13 +50,11 @@ class Search_Wine extends WP_Widget {
 	}
 
 	public static function get_product_attributes() {
-		$prd = self::wc_product_query();
-		return $prd->get_attributes();
+		return self::wc_product_query()->get_attributes();
 	}
 
 	public static function fill_attributes_array() {
-		$product_attributes = self::get_product_attributes();
-		foreach( $product_attributes as $attribute ) {
+		foreach( self::get_product_attributes() as $attribute ) {
 			self::$attributes[substr( $attribute['name'], 3 )] = array();
 
 			$get_terms = get_terms( array(
