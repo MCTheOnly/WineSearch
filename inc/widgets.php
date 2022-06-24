@@ -15,9 +15,9 @@ class Search_Wine extends WP_Widget {
 
 	public static function init() {
 		self::fill_attributes_array(); 
-		add_action( 'init', self::register_wine() );
-		add_action( 'init', self::add_styles() );
-		add_action( 'init', self::add_scripts() );
+		add_action( 'init', self::register_wine(), 10 );
+		add_action( 'init', self::add_styles(), 11 );
+		add_action( 'init', self::add_scripts(), 11 );
 		wp_localize_script( 'wine-search-script', 'attributesData', self::$attributes );
 	}
 	public static function add_styles() {
@@ -91,8 +91,8 @@ class Search_Wine extends WP_Widget {
 					if ( ! empty( self::$attributes ) ) :
 						foreach( self::$attributes as $attribute => $terms ) : ?>
 							<div class="wine-search__attribute-container <?php esc_attr_e( $attribute ); ?>">
-								<label for="search-<?php esc_attr_e( $attribute ); ?>" class="js--">
-									<input type="text" placeholder="<?php esc_attr_e( $attribute ); ?>" id="search-<?php esc_attr_e( $attribute ); ?>">
+								<label for="search-<?php esc_attr_e( $attribute ); ?>" class="attribute-label js--">
+									<input type="text" placeholder="<?php esc_attr_e( $attribute ); ?>" id="search-<?php esc_attr_e( $attribute ); ?>" class="attribute-input js--attribute-input" data-attribute="<?php esc_attr_e( $attribute ); ?>">
 								</label>
 								<ul>
 									<?php foreach( $terms as $term ) : ?>
@@ -111,6 +111,11 @@ class Search_Wine extends WP_Widget {
 				</form>
 			</div>
 		</div>
+		<script>
+			const attr = new wineSearch();
+			attr.getInputs();
+			attr.attributeSearch();
+		</script>
 
 		<?php
 		if ( isset( $_POST['submit'] ) ) {

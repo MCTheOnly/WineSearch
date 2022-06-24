@@ -63,3 +63,12 @@
 	background-color: black;
 	color: white;
 }
+
+
+.wine-search__form .attribute-label {
+	position: relative;
+}
+
+.wine-search__form .attribute-label .attribute-input {
+	width: 100% !important;
+}
