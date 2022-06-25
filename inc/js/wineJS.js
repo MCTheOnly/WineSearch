@@ -17,18 +17,25 @@ class wineSearch {
 	}
 
 	attributeSearch() {
-		let attributes = this.attributes;
 
 		this.inputs.forEach((e) => {
 			e.addEventListener('input', () => {
 				// console.log(attributes[e.dataset.attribute]);
 				// console.log(e.value, e.dataset.attribute);
-				attributes[e.dataset.attribute].forEach((attribute) => {
-					console.log(attribute);
-					attribute.toLowerCase().includes(e.value.toLowerCase()) ? this.labels.forEach((term) => {
-						term.dataset.term = attribute ? console.log(term) : console.log('error');
-					}) : console.log(false);
-				});
+				// this.attributes[e.dataset.attribute].forEach((term) => {
+				// 	if (term.toLowerCase().includes(e.value.toLowerCase())) {
+				this.labels.forEach((label) => {
+					if (label.dataset.attribute.toLowerCase() == e.dataset.attribute.toLowerCase() && label.dataset.term.toLowerCase().includes(e.value.toLowerCase())) {
+						console.log(e.value, label);
+						label.style.display = 'flex';
+						// label.dataset.attribute.toLowerCase() == term.toLowerCase() ? console.log(label) : console.log('error');
+					} else if (label.dataset.attribute.toLowerCase() == e.dataset.attribute.toLowerCase() && !label.dataset.term.toLowerCase().includes(e.value.toLowerCase())) {
+						label.style.display = 'none';
+
+					}
+				})
+				// 	}
+				// });
 			});
 		})
 	}
