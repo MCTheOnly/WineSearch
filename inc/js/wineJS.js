@@ -3,25 +3,32 @@ let attributesArray = attributesData;
 class wineSearch {
 	constructor() {
 		this.attributes = attributesArray;
-		// this.attributeInputs = document.querySelectorAll('.js--attribute-input');
+		this.inputs;
+		this.labels;
 	}
+
 	getInputs() {
-		return document.querySelectorAll('.js--attribute-input');
+		this.inputs = document.querySelectorAll('.js--attribute-input');
+		console.log(this.inputs);
 	}
+	getLabels() {
+		this.labels = document.querySelectorAll('.js--attribute-terms');
+		console.log(this.labels);
+	}
+
 	attributeSearch() {
-		let inputs = this.getInputs();
 		let attributes = this.attributes;
 
-		inputs.forEach((e) => {
+		this.inputs.forEach((e) => {
 			e.addEventListener('input', () => {
-				console.log(attributes[e.dataset.attribute]);
-				console.log(e.value, e.dataset.attribute);
+				// console.log(attributes[e.dataset.attribute]);
+				// console.log(e.value, e.dataset.attribute);
 				attributes[e.dataset.attribute].forEach((attribute) => {
 					console.log(attribute);
-					attribute.includes(e.value) ? console.log(attribute.search(e.value)) : console.log(false);
-
+					attribute.toLowerCase().includes(e.value.toLowerCase()) ? this.labels.forEach((term) => {
+						term.dataset.term = attribute ? console.log(term) : console.log('error');
+					}) : console.log(false);
 				});
-
 			});
 		})
 	}

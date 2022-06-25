@@ -91,13 +91,13 @@ class Search_Wine extends WP_Widget {
 					if ( ! empty( self::$attributes ) ) :
 						foreach( self::$attributes as $attribute => $terms ) : ?>
 							<div class="wine-search__attribute-container <?php esc_attr_e( $attribute ); ?>">
-								<label for="search-<?php esc_attr_e( $attribute ); ?>" class="attribute-label js--">
+								<label for="search-<?php esc_attr_e( $attribute ); ?>" class="attribute-label js--attribute-label" data-attribute="<?php esc_attr_e( $attribute ); ?>">
 									<input type="text" placeholder="<?php esc_attr_e( $attribute ); ?>" id="search-<?php esc_attr_e( $attribute ); ?>" class="attribute-input js--attribute-input" data-attribute="<?php esc_attr_e( $attribute ); ?>">
 								</label>
 								<ul>
 									<?php foreach( $terms as $term ) : ?>
 									<li>
-										<label for="<?php esc_attr_e( $term ); ?>">
+										<label for="<?php esc_attr_e( $term ); ?>" data-term="<?php esc_attr_e( $term ) ?>" class="js--attribute-terms">
 											<input type="checkbox" value="<?php esc_attr_e( $term );?>" id="<?php esc_attr_e( $term ); ?>" name="<?php esc_attr_e( $attribute . "[]" ); ?>">
 											<?php _e( $term ); ?>
 										</label>
@@ -114,6 +114,7 @@ class Search_Wine extends WP_Widget {
 		<script>
 			const attr = new wineSearch();
 			attr.getInputs();
+			attr.getLabels();
 			attr.attributeSearch();
 		</script>
 
