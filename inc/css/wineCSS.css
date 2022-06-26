@@ -32,7 +32,12 @@
 	left: 0;
 	width: 100%;
 	transform: translateY(100%);
-	background-color: lightgray;
+}
+
+.wine-search__attribute-container ul li {
+	margin-bottom: 0;
+	background-color: #EEEEEE;
+
 }
 
 
@@ -71,4 +76,13 @@
 
 .wine-search__form .attribute-label .attribute-input {
 	width: 100% !important;
+}
+
+.wine-search__form .term-label {
+	padding: 10px;
+}
+
+.wine-search__form .term-label input[type="checkbox"] {
+	opacity: 0;
+	width: 1px;
 }

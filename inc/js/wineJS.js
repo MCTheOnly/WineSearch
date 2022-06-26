@@ -5,6 +5,7 @@ class wineSearch {
 		this.attributes = attributesArray;
 		this.inputs;
 		this.labels;
+		this.checkboxes;
 	}
 
 	getInputs() {
@@ -15,28 +16,44 @@ class wineSearch {
 		this.labels = document.querySelectorAll('.js--attribute-terms');
 		console.log(this.labels);
 	}
+	getCheckboxes() {
+		this.checkboxes = document.querySelectorAll('.js--form-checkbox');
+		console.log(this.checkboxes);
+	}
+
+	toggleLabel(checkAttribute, checkTerm, label) {
+		if (checkAttribute && checkTerm) {
+			label.style.display = 'flex';
+		} else if (checkAttribute && !checkTerm) {
+			label.style.display = 'none';
+		}
+	}
+
+	highlightLabel(checkbox) {
+		if (checkbox.checked) {
+			checkbox.parentElement.style.backgroundColor = '#2F7AE5';
+			checkbox.parentElement.style.color = 'white';
+		} else {
+			checkbox.parentElement.style.backgroundColor = 'lightgray';
+			checkbox.parentElement.style.color = 'black';
+		}
+	}
 
 	attributeSearch() {
-
 		this.inputs.forEach((e) => {
 			e.addEventListener('input', () => {
-				// console.log(attributes[e.dataset.attribute]);
-				// console.log(e.value, e.dataset.attribute);
-				// this.attributes[e.dataset.attribute].forEach((term) => {
-				// 	if (term.toLowerCase().includes(e.value.toLowerCase())) {
 				this.labels.forEach((label) => {
-					if (label.dataset.attribute.toLowerCase() == e.dataset.attribute.toLowerCase() && label.dataset.term.toLowerCase().includes(e.value.toLowerCase())) {
-						console.log(e.value, label);
-						label.style.display = 'flex';
-						// label.dataset.attribute.toLowerCase() == term.toLowerCase() ? console.log(label) : console.log('error');
-					} else if (label.dataset.attribute.toLowerCase() == e.dataset.attribute.toLowerCase() && !label.dataset.term.toLowerCase().includes(e.value.toLowerCase())) {
-						label.style.display = 'none';
-
-					}
+					this.toggleLabel(label.dataset.attribute.toLowerCase() == e.dataset.attribute.toLowerCase(), label.dataset.term.toLowerCase().includes(e.value.toLowerCase()), label);
 				})
-				// 	}
-				// });
 			});
 		})
+	}
+
+	checkboxListener() {
+		this.checkboxes.forEach((e) => {
+			e.addEventListener('change', () => {
+				this.highlightLabel(e);
+			});
+		});
 	}
 }
