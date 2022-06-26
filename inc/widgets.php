@@ -64,7 +64,8 @@
 			return $product;
 		}
 
-		public static function fill_array($product) {
+		public static function fill_array( $product ) {
+
 			foreach( $product->get_attributes() as $attribute) {
 				if ( ! in_array( $attribute, self::$attributes ) ) {
 					self::$attributes[substr( $attribute['name'], 3 )] = array();
@@ -77,6 +78,12 @@
 					foreach( $get_terms as $term ) {
 						if ( ! in_array( $term->name, self::$attributes[substr( $attribute['name'], 3 )] ) ) {
 							self::$attributes[substr( $attribute['name'], 3 )][$term->name] = array();
+						} 
+						// else {
+						// 	array_push( self::$attributes[substr( $attribute['name'], 3 )][$term->name], $product->get_id() ); 
+						// }
+						if ( ! in_array( $product->get_id(), self::$attributes[substr( $attribute['name'], 3 )][$term->name] ) ) {
+							array_push( self::$attributes[substr( $attribute['name'], 3 )][$term->name], $product->get_name() ); 
 						}
 					}
 				}
