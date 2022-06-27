@@ -78,16 +78,21 @@
 					foreach( $get_terms as $term ) {
 						if ( ! in_array( $term->name, self::$attributes[substr( $attribute['name'], 3 )] ) ) {
 							self::$attributes[substr( $attribute['name'], 3 )][$term->name] = array();
-						} 
-						// else {
-						// 	array_push( self::$attributes[substr( $attribute['name'], 3 )][$term->name], $product->get_id() ); 
-						// }
-						if ( ! in_array( $product->get_id(), self::$attributes[substr( $attribute['name'], 3 )][$term->name] ) ) {
-							array_push( self::$attributes[substr( $attribute['name'], 3 )][$term->name], $product->get_name() ); 
 						}
+						array_push( self::$attributes[substr( $attribute['name'], 3 )][$term->name], $product->get_id() );
 					}
 				}
 			}
+
+			foreach( $product->get_attributes() as $attribute) {
+				foreach( $get_terms as $term ) {
+					
+				}
+			}
+
+			echo '<pre>' . $product->get_name();
+			print_r( $product->get_attributes() );
+			echo '</pre>';
 		}
 		
 		//frontend
@@ -135,20 +140,20 @@
 			<?php
 			if ( isset( $_POST['submit'] ) ) {
 				
-				foreach( $_POST as $attribute => $terms ) {
-					foreach( $terms as $term ) {
-						$query = new WC_Product_Query(array(
-						    'limit'     => -1,
-						    'orderby'   => 'date',
-						    'order'     => 'DESC',
-						    'tax_query' => array( array(
-						        'taxonomy' => "pa_$attribute",
-						        'field'    => 'slug',
-						        'terms'    => $term
-						    ))
-						));
-					}
-				}
+				// foreach( $_POST as $attribute => $terms ) {
+				// 	foreach( $terms as $term ) {
+				// 		$query = new WC_Product_Query(array(
+				// 		    'limit'     => -1,
+				// 		    'orderby'   => 'date',
+				// 		    'order'     => 'DESC',
+				// 		    'tax_query' => array( array(
+				// 		        'taxonomy' => "pa_$attribute",
+				// 		        'field'    => 'slug',
+				// 		        'terms'    => $term
+				// 		    ))
+				// 		));
+				// 	}
+				// }
 				
 				echo '<pre>';
 				print_r( self::$attributes );

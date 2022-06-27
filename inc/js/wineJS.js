@@ -34,7 +34,7 @@ class wineSearch {
 			checkbox.parentElement.style.backgroundColor = '#2F7AE5';
 			checkbox.parentElement.style.color = 'white';
 		} else {
-			checkbox.parentElement.style.backgroundColor = 'lightgray';
+			checkbox.parentElement.style.backgroundColor = '#EEEEEE';
 			checkbox.parentElement.style.color = 'black';
 		}
 	}
