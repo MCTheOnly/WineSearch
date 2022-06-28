@@ -54,14 +54,24 @@
 			if ( $query->have_posts() ): while ( $query->have_posts() ):
 				$query->the_post();
 				global $product;
-				self::fill_array($product);
+
+				self::fill_array( $product );
 			endwhile;
 			wp_reset_postdata();
 			endif;
-		
 			wp_reset_query();
 
-			return $product;
+			if ( $query->have_posts() ): while ( $query->have_posts() ):
+				$query->the_post();
+
+				global $product;
+
+				self::add_products_ids( $product );
+
+			endwhile;
+			wp_reset_postdata();
+			endif;
+			wp_reset_query();
 		}
 
 		public static function fill_array( $product ) {
@@ -69,32 +79,45 @@
 			foreach( $product->get_attributes() as $attribute) {
 				if ( ! in_array( $attribute, self::$attributes ) ) {
 					self::$attributes[substr( $attribute['name'], 3 )] = array();
-
+					
 					$get_terms = get_terms( array(
 						'taxonomy'   => $attribute['name'],
 						'hide_empty' => false,
 					) );
-
+					
 					foreach( $get_terms as $term ) {
+
 						if ( ! in_array( $term->name, self::$attributes[substr( $attribute['name'], 3 )] ) ) {
 							self::$attributes[substr( $attribute['name'], 3 )][$term->name] = array();
 						}
-						array_push( self::$attributes[substr( $attribute['name'], 3 )][$term->name], $product->get_id() );
 					}
 				}
 			}
+		}
+
+		public static function add_products_ids( $product ) {
 
 			foreach( $product->get_attributes() as $attribute) {
+
+				$attr        = substr( $attribute['name'], 3 );
+				$id          = $product->get_id();
+				$terms_array = $product->attributes[$attribute['name']]['options'];
+				$get_terms   = get_terms( array(
+					'taxonomy'   => $attribute['name'],
+					'hide_empty' => false
+				) );
+
 				foreach( $get_terms as $term ) {
-					
+
+					if( is_array(self::$attributes[$attr][$term->name]) ) {
+						if( in_array( $term->term_id, $terms_array ) ) {
+							array_push(self::$attributes[$attr][$term->name], $id );
+						}
+					}
 				}
 			}
-
-			echo '<pre>' . $product->get_name();
-			print_r( $product->get_attributes() );
-			echo '</pre>';
 		}
-		
+
 		//frontend
 		public function widget( $args, $instance ) {
 			
@@ -139,21 +162,6 @@
 
 			<?php
 			if ( isset( $_POST['submit'] ) ) {
-				
-				// foreach( $_POST as $attribute => $terms ) {
-				// 	foreach( $terms as $term ) {
-				// 		$query = new WC_Product_Query(array(
-				// 		    'limit'     => -1,
-				// 		    'orderby'   => 'date',
-				// 		    'order'     => 'DESC',
-				// 		    'tax_query' => array( array(
-				// 		        'taxonomy' => "pa_$attribute",
-				// 		        'field'    => 'slug',
-				// 		        'terms'    => $term
-				// 		    ))
-				// 		));
-				// 	}
-				// }
 				
 				echo '<pre>';
 				print_r( self::$attributes );
