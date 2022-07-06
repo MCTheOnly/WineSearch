@@ -36,3 +36,4 @@ function cdon_custom_mobile_menu() {
     echo str_replace( $heading_opening, $heading_opening . $logo .  $wpml_ls, $menu ); 
 }
 add_action( 'woodmart_before_wp_footer', 'cdon_custom_mobile_menu', 135 );
+

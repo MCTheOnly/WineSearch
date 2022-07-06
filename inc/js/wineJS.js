@@ -8,6 +8,14 @@ class wineSearch {
 		this.checkboxes;
 	}
 
+	initSearch() {
+		this.getInputs();
+		this.getLabels();
+		this.getCheckboxes();
+		this.attributeSearch();
+		this.checkboxListener();
+	}
+
 	getInputs() {
 		this.inputs = document.querySelectorAll('.js--attribute-input');
 		console.log(this.inputs);
@@ -34,7 +42,7 @@ class wineSearch {
 			checkbox.parentElement.style.backgroundColor = '#2F7AE5';
 			checkbox.parentElement.style.color = 'white';
 		} else {
-			checkbox.parentElement.style.backgroundColor = '#EEEEEE';
+			checkbox.parentElement.style.backgroundColor = '#FFF';
 			checkbox.parentElement.style.color = 'black';
 		}
 	}
