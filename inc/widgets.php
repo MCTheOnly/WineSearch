@@ -53,11 +53,10 @@
 			$query = new WP_Query( $args );
 
 			if ( $query->have_posts() ): while ( $query->have_posts() ):
-				$query->the_post();
-
-				global $product;
 			
-					self::fill_array( $product );
+				$query->the_post();
+				global $product;
+				self::fill_array( $product );
 
 			endwhile;
 			wp_reset_postdata();
